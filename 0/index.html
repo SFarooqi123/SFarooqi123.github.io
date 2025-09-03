@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 0 – Becoming Friends with Your Camera</title>
+
+  <!-- Google Fonts (distinct look from the main page) -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #0b1113;           /* deep ink */
+      --panel: #0f1719;        /* card surface */
+      --panel-2: #101c1f;      /* subtle variation */
+      --text: #e7f0f2;         /* primary text */
+      --muted: #9cb3b9;        /* secondary text */
+      --accent: #18b0b0;       /* teal */
+      --accent-2: #ffc857;     /* warm amber */
+      --ring: #1e2a2d;         /* card border */
+      --code: #0f2430;
+      --radius: 18px;
+      --maxw: 950px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: 'Outfit', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 800px at 50% -220px, #0e1517 10%, var(--bg) 60%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.55;
+    }
+
+    .wrap{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 42px 20px 80px;
+    }
+
+    /* Header */
+    .header{
+      text-align: center;
+      margin-bottom: 26px;
+    }
+    .eyebrow{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(24,176,176,.14);
+      color: #b6f3f3;
+      border: 1px solid rgba(24,176,176,.35);
+      font-size: 12px;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1.title{
+      margin: 0 0 6px;
+      font-size: clamp(26px, 4.8vw, 42px);
+      font-weight: 700;
+      letter-spacing: .2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+
+    /* Section cards */
+    .card{
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--ring);
+      border-radius: var(--radius);
+      padding: 18px 18px 22px;
+      box-shadow: 0 14px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+      margin: 18px 0;
+    }
+    .card h2{
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: #d9fdff;
+    }
+    .card h2 .kicker{
+      display:inline-block;
+      margin-right: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      color: #0b0f10;
+      background: var(--accent-2);
+    }
+    .card p{
+      margin: 10px 0 12px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Figure grid */
+    .figgrid{
+      display: grid;
+      gap: 16px;
+    }
+    @media (min-width: 760px){
+      .figgrid.cols-2{ grid-template-columns: 1fr 1fr; }
+    }
+
+    figure{
+      margin: 0;
+      background: #0e1517;
+      border: 1px solid #1b2629;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    figure img{
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    figcaption{
+      padding: 10px 12px 12px;
+      color: #b7c7cb;
+      font-size: 12.8px;
+      line-height: 1.4;
+      font-family: "Source Serif 4", ui-serif, Georgia, serif;
+      border-top: 1px solid #172124;
+      background: linear-gradient(180deg, #0f1618, #0b1214);
+    }
+
+    /* Callout */
+    .callout{
+      border-left: 4px solid var(--accent);
+      padding: 10px 12px;
+      background: #0e1618;
+      color: #c9e9ec;
+      border-radius: 10px;
+      margin: 12px 0 14px;
+      font-size: 14px;
+    }
+
+    /* Footer nav */
+    .footer{
+      margin-top: 26px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .footer a{
+      color: var(--accent-2);
+      text-decoration: none;
+    }
+    .footer a:hover{ text-decoration: underline; }
+
+    /* Small "status" badges if you want them */
+    .badge{
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0b0f10;
+      background: #8be7e7;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 6px 16px rgba(0,0,0,.24);
+      margin-left: 8px;
+      transform: translateY(-1px);
+    }
+
+    /* Accessibility */
+    a, button { outline: none; }
+    a:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="header">
+      <span class="eyebrow">CS180 • Computational Photography</span>
+      <h1 class="title">Project 0: Becoming Friends with Your Camera</h1>
+      <p class="subtitle">A hands-on warm-up exploring focal length, distance, and motion for perspective control.</p>
+    </header>
+
+    <!-- Overview -->
+    <section class="card" id="overview">
+      <h2>Overview</h2>
+      <p>
+        This project builds an intuition for how distance to subject, zoom, and camera motion alter the perceived shape and
+        spatial relationships in a scene. The activities below are structured so you can drop your images in later—no
+        code changes required—just replace the <code>media/*.jpg</code> files.
+      </p>
+      <div class="callout">
+        Tip: keep framing consistent when comparing shots (same subject size or same camera position) so differences are
+        attributable to the parameter you’re testing.
+      </div>
+    </section>
+
+    <!-- Part 1 -->
+    <section class="card" id="part-1">
+      <h2><span class="kicker">Part 1</span>Self-Portraits: Close vs. Stepped-Back</h2>
+      <p>
+        Compare a tight close-up with a stepped-back shot (keeping the head the same size via zoom). This highlights
+        how distance and focal length influence facial proportions.
+      </p>
+      <div class="figgrid cols-2">
+        <figure>
+          <img src="./media/img1.jpg" alt="Close portrait at short distance (reference placeholder)" />
+          <figcaption>
+            <strong>Close distance.</strong> Wide perspective can exaggerate features and curve verticals.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/img2.jpg" alt="Stepped-back portrait with zoom (reference placeholder)" />
+          <figcaption>
+            <strong>Stepped back + zoom.</strong> Compression reduces distortion—features appear flatter and more natural.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Part 2 -->
+    <section class="card" id="part-2">
+      <h2><span class="kicker">Part 2</span>Architectural Perspective &amp; Compression</h2>
+      <p>
+        Shoot the same street/scene twice: (A) from far away with zoom, and (B) from up close with a wider lens. Observe
+        vanishing lines and relative object spacing.
+      </p>
+      <div class="figgrid cols-2">
+        <figure>
+          <img src="./media/img3.jpg" alt="Telephoto framing of a street from afar (reference placeholder)" />
+          <figcaption>
+            <strong>Telephoto from distance.</strong> Planes appear closer together; far objects feel larger (“compressed”).
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/img4.jpg" alt="Wide-angle framing of the same street from up close (reference placeholder)" />
+          <figcaption>
+            <strong>Wide from near.</strong> Stronger convergence of lines; more dramatic foreground-background separation.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Part 3 -->
+    <section class="card" id="part-3">
+      <h2><span class="kicker">Part 3</span>The Dolly Zoom (Vertigo Effect)</h2>
+      <p>
+        Create a short sequence where you <em>physically</em> move backward while zooming in (or vice-versa) to keep the subject
+        roughly the same size while the background “breathes.” A single representative frame is shown below; you can also
+        embed a GIF or video later.
+      </p>
+      <div class="figgrid">
+        <figure>
+          <img src="./media/img5.jpg" alt="Representative frame of a dolly-zoom sequence (reference placeholder)" />
+          <figcaption>
+            Keep the subject size constant across frames; only the environment should appear to warp.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Methods -->
+    <section class="card" id="methods">
+      <h2>Methods <span class="badge">Setup Notes</span></h2>
+      <p>
+        Each experiment isolates one variable at a time:
+      </p>
+      <ul style="margin: 8px 0 0 18px; color: var(--muted);">
+        <li><strong>Part 1:</strong> Keep head size consistent between shots; vary camera distance + focal length together.</li>
+        <li><strong>Part 2:</strong> Match scene center; shoot from near (wide) vs. far (tele) to compare perspective lines.</li>
+        <li><strong>Part 3:</strong> Maintain subject size by counterbalancing motion with zoom; capture 10–20 frames or a short clip.</li>
+      </ul>
+      <p style="margin-top:10px;">
+        File layout assumes images live in <code>./media/</code>. Replace <code>img1.jpg</code> … <code>img5.jpg</code> with
+        your own filenames or extend the figure blocks to add more comparisons.
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>© Zane Mogannam • Project 0</div>
+      <div><a href="../index.html">← Back to Portfolio</a></div>
+    </div>
+  </main>
+</body>
+</html>
