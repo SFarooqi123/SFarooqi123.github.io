@@ -1,16 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Portfolio</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zane Mogannam – CS180 Portfolio</title>
+  <style>
+    :root{
+      --bg: #0b0b0c;
+      --panel: #141416;
+      --panel-2: #111113;
+      --text: #e7e7ea;
+      --muted: #a5a7ad;
+      --link: #2f72ff;
+      --link-visited: #8aa4ff;
+      --pill-blue: #0a64ff;
+      --pill-gray: #6b7280;
+      --ring: #2d2f36;
+      --card-radius: 18px;
+      --maxw: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 50% -200px, #111218 10%, var(--bg) 60%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.45;
+    }
+
+    .wrap{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header{
+      text-align: center;
+      margin: 40px 0 32px;
+    }
+    header h1{
+      margin: 0 0 14px;
+      font-weight: 650;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: .2px;
+    }
+    header p{
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.8vw, 18px);
+    }
+
+    .grid{
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+
+    .card{
+      grid-column: span 12;
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--ring);
+      border-radius: var(--card-radius);
+      padding: 22px 22px 26px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: #3a3d46;
+      box-shadow: 0 16px 40px rgba(0,0,0,.42);
+    }
+
+    /* Large screens: two cards side by side */
+    @media (min-width: 800px){
+      .card { grid-column: span 6; }
+    }
+
+    .card h2{
+      margin: 2px 0 12px;
+      font-size: clamp(18px, 2.2vw, 22px);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .card h2 a{
+      color: var(--link);
+      text-decoration: none;
+    }
+    .card h2 a:visited{ color: var(--link-visited); }
+    .card h2 a:hover{ text-decoration: underline; }
+
+    .card p{
+      margin: 10px 0 18px;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+
+    .pill{
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .2px;
+      color: #fff;
+      background: var(--pill-blue);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 6px 16px rgba(10,100,255,.22);
+      user-select: none;
+    }
+    .pill.gray{
+      background: var(--pill-gray);
+      box-shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 6px 16px rgba(0,0,0,.25);
+    }
+
+    /* Accessibility focus styles */
+    a, button { outline: none; }
+    a:focus-visible, .pill:focus-visible, .card:focus-within{
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+
+    footer{
+      max-width: var(--maxw);
+      margin: 44px auto 0;
+      padding: 0 24px;
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to My CS180 Portfolio!</h1>
-    <a href="./1/index.html">Project 1</a>
+  <div class="wrap">
+    <header>
+      <h1>Zane Mogannam</h1>
+      <p>CS180: Intro to Computer Vision and Computational Photography</p>
+    </header>
+
+    <section class="grid" aria-label="Projects">
+      <!-- Project 0 Card -->
+      <article class="card">
+        <h2>
+          <a href="#project0">Project 0: Becoming Friends with Your Camera</a>
+        </h2>
+        <p>Gaining more familiarity with camera settings and positioning through hands-on photography experiments.</p>
+        <span class="pill" aria-label="Completed">Completed</span>
+      </article>
+
+      <!-- Project 1 Card -->
+      <article class="card">
+        <h2>
+          <a href="#project1">Project 1: Coming Soon</a>
+        </h2>
+        <p>TBD</p>
+        <span class="pill gray" aria-label="Coming soon">Coming&nbsp;Soon</span>
+      </article>
+    </section>
+  </div>
+
+  <footer>
+    <!-- Optional footer or leave empty -->
+  </footer>
 </body>
 </html>
+
