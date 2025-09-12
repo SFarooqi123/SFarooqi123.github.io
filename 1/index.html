@@ -12,7 +12,7 @@
     :root{
       --bg: #0b1113;
       --panel: #0f1719;
-      --panel-2: #0f1a1d;
+      --panel-2: #101c1f;
       --text: #e7f0f2;
       --muted: #9cb3b9;
       --accent: #18b0b0;
@@ -33,9 +33,9 @@
       -webkit-font-smoothing: antialiased;
       line-height: 1.6;
     }
-
     .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 42px 20px 80px; }
 
+    /* Header */
     header{ text-align:center; margin-bottom: 22px; }
     .eyebrow{
       display:inline-block; padding: 4px 10px; border-radius: 999px;
@@ -49,27 +49,7 @@
     }
     .subtitle{ margin: 0; color: var(--muted); font-size: 14.5px; }
 
-    /* Vertical TOC */
-    .toc{
-      display: block;
-      margin: 20px auto;
-      max-width: 280px;
-    }
-    .toc a{
-      display: block;
-      margin: 8px 0;
-      text-align: center;
-      text-decoration: none;
-      color: #0b0f10;
-      background: #8be7e7;
-      border: 1px solid rgba(255,255,255,.14);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .toc a:hover{ opacity:.9; }
-
+    /* Cards */
     .card{
       background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border: 1px solid var(--ring); border-radius: var(--radius);
@@ -77,34 +57,36 @@
       box-shadow: 0 14px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
     }
     .card h2{ font-size: 18px; font-weight: 700; margin: 0 0 12px; color: #d9fdff; }
-    .card p{ margin: 10px 0 12px; color: var(--muted); font-size: 15px; }
+    .card p, .card ul{ color: var(--muted); font-size: 15px; }
 
-    .kicker{
-      display:inline-block; margin-right: 6px; padding: 3px 8px; border-radius: 999px;
-      font-size: 11px; letter-spacing: .3px; text-transform: uppercase; color: #0b0f10; background: var(--accent-2);
-    }
-
+    /* Figures */
     .figgrid{ display:grid; gap:16px; }
-    @media (min-width: 760px){
-      .figgrid.cols-2{ grid-template-columns: 1fr 1fr; }
-      .figgrid.cols-3{ grid-template-columns: 1fr 1fr 1fr; }
-    }
+    @media (min-width: 760px){ .figgrid.cols-2{ grid-template-columns: 1fr 1fr; } }
+
     figure{ margin:0; background:#0e1517; border:1px solid #1b2629; border-radius:14px; overflow:hidden; }
     figure img{ display:block; width:100%; height:auto; }
     figcaption{
-      padding: 10px 12px 12px; color:#b7c7cb; font-size: 12.8px; line-height:1.4;
+      padding: 10px 12px 12px;
+      color:#b7c7cb; font-size: 13px; line-height:1.4;
       font-family: "Source Serif 4", ui-serif, Georgia, serif;
       border-top: 1px solid #172124; background: linear-gradient(180deg, #0f1618, #0b1214);
     }
+    figcaption .name{ color:#e9fafc; font-weight:700; }
+    figcaption .off{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace; color:#c6f3ff; }
 
+    /* Tiny label pills */
+    .kicker{
+      display:inline-block; margin-right: 8px; padding: 3px 8px; border-radius: 999px;
+      font-size: 11px; letter-spacing: .3px; text-transform: uppercase; color: #0b0f10; background: var(--accent-2);
+    }
+
+    /* Tables (optional quick-scan offsets) */
     .table-wrap{ overflow-x:auto; margin-top:10px; }
     table{
       width:100%; border-collapse: collapse; font-size: 14px; color: var(--text);
       background: #0e1517; border: 1px solid #1b2629; border-radius: 12px; overflow:hidden;
     }
-    thead th{
-      text-align:left; background:#0f181a; color:#d9fdff; border-bottom:1px solid #1b2629; padding:10px 12px;
-    }
+    thead th{ text-align:left; background:#0f181a; color:#d9fdff; border-bottom:1px solid #1b2629; padding:10px 12px; }
     tbody td{ padding:10px 12px; border-top:1px solid #142024; color:#cfe1e4; }
     tbody tr:hover{ background:#0f181a; }
 
@@ -119,91 +101,4 @@
 <body>
   <main class="wrap">
     <header>
-      <span class="eyebrow">CS180 • Computer Vision & Computational Photography</span>
-      <h1>Project 1: Prokudin-Gorskii Colorization</h1>
-      <p class="subtitle">Registering historical B/G/R plates to reconstruct color images.</p>
-
-      <!-- Vertical TOC -->
-      <nav class="toc" aria-label="Sections">
-        <a href="#overview">Overview & Approach</a>
-        <a href="#small">Small Images (Exhaustive)</a>
-        <a href="#large">Large Images (Pyramid)</a>
-        <a href="#provided">Provided Results + Offsets</a>
-        <a href="#failures">Failures & Debugging</a>
-        <a href="#own">My Chosen Images</a>
-        <a href="#bells">Bells & Whistles</a>
-        <a href="#submission">Submission</a>
-      </nav>
-    </header>
-
-    <!-- Overview -->
-    <section id="overview" class="card">
-      <h2><span class="kicker">Overview</span>& Approach</h2>
-      <p>Brief description of project goals and general approach.</p>
-    </section>
-
-    <!-- Small images -->
-    <section id="small" class="card">
-      <h2><span class="kicker">Method</span>Exhaustive Search (Small JPGs)</h2>
-      <p>Explain exhaustive search, NCC metric, cropping, np.roll etc.</p>
-      <div class="figgrid cols-2">
-        <figure><img src="./media/cathedral_color.jpg" alt="cathedral"><figcaption>cathedral — R (3,12), G (2,5)</figcaption></figure>
-        <figure><img src="./media/monastery_color.jpg" alt="monastery"><figcaption>monastery — R (2,3), G (2,-3)</figcaption></figure>
-      </div>
-    </section>
-
-    <!-- Large images -->
-    <section id="large" class="card">
-      <h2><span class="kicker">Method</span>Pyramid Alignment (Large TIFs)</h2>
-      <p>Describe pyramid search, scaling, refinement window, Gaussian blur.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Image</th><th>R offset</th><th>G offset</th></tr></thead>
-          <tbody>
-            <tr><td>church</td><td>(-4, 58)</td><td>(4, 25)</td></tr>
-            <tr><td>harvesters</td><td>(13, 124)</td><td>(17, 60)</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- Provided results -->
-    <section id="provided" class="card">
-      <h2><span class="kicker">Results</span>Provided Examples + Offsets</h2>
-      <p>List offsets in table or captions.</p>
-    </section>
-
-    <!-- Failures -->
-    <section id="failures" class="card">
-      <h2><span class="kicker">Analysis</span>Failures & Debugging</h2>
-      <p>Explain why emir.tif or others fail, edge-based fixes, etc.</p>
-    </section>
-
-    <!-- Own images -->
-    <section id="own" class="card">
-      <h2><span class="kicker">Results</span>My Chosen Images</h2>
-      <div class="figgrid cols-2">
-        <figure><img src="./media/mills_color.jpg" alt="mills"><figcaption>mills — R (23,125), G (14,56)</figcaption></figure>
-        <figure><img src="./media/dome_color.jpg" alt="dome"><figcaption>dome — R (-6,125), G (-4,52)</figcaption></figure>
-      </div>
-    </section>
-
-    <!-- Bells -->
-    <section id="bells" class="card">
-      <h2><span class="kicker">Extras</span>Bells & Whistles</h2>
-      <p>Auto contrast, white balance, edge alignment, before/after images.</p>
-    </section>
-
-    <!-- Submission -->
-    <section id="submission" class="card">
-      <h2><span class="kicker">Wrap-Up</span>Submission</h2>
-      <p>All results shown are compressed (PNG/JPG). URL submitted to class gallery.</p>
-    </section>
-
-    <div class="footer">
-      <div>© Samar Farooqi • Project 1</div>
-      <div><a href="../index.html">← Back to Portfolio</a></div>
-    </div>
-  </main>
-</body>
-</html>
+      <
