@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Project 1 – Colorizing the Prokudin-Gorskii Photo Collection</title>
+  <title>Project 1 – Prokudin-Gorskii Colorization</title>
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      /* Same family of colors as your Project 0 page */
+      /* sibling style to Project 0, not identical */
       --bg: #0b1113;
       --panel: #0f1719;
-      --panel-2: #101c1f;
+      --panel-2: #0f1a1d;
       --text: #e7f0f2;
       --muted: #9cb3b9;
-      --accent: #18b0b0;
-      --accent-2: #ffc857;
+      --accent: #18b0b0;     /* teal */
+      --accent-2: #ffc857;   /* amber */
       --ring: #1e2a2d;
       --code: #0f2430;
       --radius: 18px;
@@ -32,121 +32,69 @@
       background: radial-gradient(1200px 800px at 50% -220px, #0e1517 10%, var(--bg) 60%);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
-      line-height: 1.55;
+      line-height: 1.6;
     }
 
-    .wrap{
-      max-width: var(--maxw);
-      margin: 0 auto;
-      padding: 42px 20px 80px;
-    }
+    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 42px 20px 80px; }
 
     /* Header */
-    .header{
-      text-align: center;
-      margin-bottom: 26px;
-    }
+    header{ text-align:center; margin-bottom: 22px; }
     .eyebrow{
-      display:inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(24,176,176,.14);
-      color: #b6f3f3;
-      border: 1px solid rgba(24,176,176,.35);
-      font-size: 12px;
-      letter-spacing: .35px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
+      display:inline-block; padding: 4px 10px; border-radius: 999px;
+      background: rgba(24,176,176,.14); color: #b6f3f3; border: 1px solid rgba(24,176,176,.35);
+      font-size: 12px; letter-spacing: .35px; text-transform: uppercase; margin-bottom: 10px;
     }
-    h1.title{
-      margin: 0 0 6px;
-      font-size: clamp(26px, 4.8vw, 42px);
-      font-weight: 700;
-      letter-spacing: .2px;
+    h1{
+      margin: 0 0 6px; font-size: clamp(26px, 4.6vw, 40px); font-weight: 700; letter-spacing: .2px;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    .subtitle{
-      margin: 0;
-      color: var(--muted);
-      font-size: 14.5px;
-    }
+    .subtitle{ margin: 0; color: var(--muted); font-size: 14.5px; }
 
-    /* Local nav (anchors to sections) */
+    /* Local nav */
     .toc{
-      display:flex; flex-wrap: wrap; gap:10px; justify-content:center;
-      margin: 16px 0 8px;
+      margin: 16px auto 8px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
     }
     .toc a{
-      text-decoration:none; color:#0b0f10; background: #8be7e7; border:1px solid rgba(255,255,255,.14);
+      text-decoration:none; color:#0b0f10; background:#8be7e7; border:1px solid rgba(255,255,255,.14);
       padding:6px 10px; border-radius:999px; font-size:12.5px; font-weight:600;
     }
     .toc a:hover{ opacity:.9; }
 
-    /* Cards */
+    /* Card */
     .card{
       background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border: 1px solid var(--ring);
-      border-radius: var(--radius);
-      padding: 18px 18px 22px;
+      border: 1px solid var(--ring); border-radius: var(--radius);
+      padding: 18px 18px 22px; margin: 18px 0;
       box-shadow: 0 14px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-      margin: 18px 0;
     }
-    .card h2{
-      font-size: 18px;
-      font-weight: 700;
-      margin: 0 0 12px;
-      color: #d9fdff;
-    }
+    .card h2{ font-size: 18px; font-weight: 700; margin: 0 0 12px; color: #d9fdff; }
     .card p{ margin: 10px 0 12px; color: var(--muted); font-size: 15px; }
 
     .kicker{
       display:inline-block; margin-right: 6px; padding: 3px 8px; border-radius: 999px;
-      font-size: 11px; letter-spacing: .3px; text-transform: uppercase; color: #0b0f10;
-      background: var(--accent-2);
+      font-size: 11px; letter-spacing: .3px; text-transform: uppercase; color: #0b0f10; background: var(--accent-2);
     }
 
     /* Figures */
     .figgrid{ display:grid; gap:16px; }
-    @media (min-width: 760px){ .figgrid.cols-2{ grid-template-columns: 1fr 1fr; } .figgrid.cols-3{ grid-template-columns: 1fr 1fr 1fr; } }
-
-    figure{
-      margin: 0; background: #0e1517; border: 1px solid #1b2629; border-radius: 14px; overflow: hidden;
+    @media (min-width: 760px){
+      .figgrid.cols-2{ grid-template-columns: 1fr 1fr; }
+      .figgrid.cols-3{ grid-template-columns: 1fr 1fr 1fr; }
     }
+    figure{ margin:0; background:#0e1517; border:1px solid #1b2629; border-radius:14px; overflow:hidden; }
     figure img{ display:block; width:100%; height:auto; }
     figcaption{
-      padding: 10px 12px 12px;
-      color: #b7c7cb;
-      font-size: 12.8px;
-      line-height: 1.4;
+      padding: 10px 12px 12px; color:#b7c7cb; font-size: 12.8px; line-height:1.4;
       font-family: "Source Serif 4", ui-serif, Georgia, serif;
-      border-top: 1px solid #172124;
-      background: linear-gradient(180deg, #0f1618, #0b1214);
+      border-top: 1px solid #172124; background: linear-gradient(180deg, #0f1618, #0b1214);
     }
 
-    .callout{
-      border-left: 4px solid var(--accent);
-      padding: 10px 12px;
-      background: #0e1618;
-      color: #c9e9ec;
-      border-radius: 10px;
-      margin: 12px 0 14px;
-      font-size: 14px;
-    }
-
-    /* Offsets table */
+    /* Tables */
     .table-wrap{ overflow-x:auto; margin-top:10px; }
     table{
-      width:100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      color: var(--text);
-      background: #0e1517;
-      border: 1px solid #1b2629;
-      border-radius: 12px;
-      overflow: hidden;
+      width:100%; border-collapse: collapse; font-size: 14px; color: var(--text);
+      background: #0e1517; border: 1px solid #1b2629; border-radius: 12px; overflow:hidden;
     }
     thead th{
       text-align:left; background:#0f181a; color:#d9fdff; border-bottom:1px solid #1b2629; padding:10px 12px;
@@ -154,126 +102,48 @@
     tbody td{ padding:10px 12px; border-top:1px solid #142024; color:#cfe1e4; }
     tbody tr:hover{ background:#0f181a; }
 
+    /* Callout */
+    .callout{
+      border-left: 4px solid var(--accent); padding: 10px 12px; background: #0e1618; color: #c9e9ec;
+      border-radius: 10px; margin: 12px 0 14px; font-size: 14px;
+    }
+
     code, pre{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      background: var(--code); color: #c6f3ff; border: 1px solid #18303d;
-      border-radius: 10px; padding: 4px 7px;
+      background: var(--code); color: #c6f3ff; border: 1px solid #18303d; border-radius: 10px; padding: 4px 7px;
     }
     pre{ padding:10px 12px; overflow:auto; }
 
+    /* Footer */
     .footer{
-      margin-top: 26px;
-      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      margin-top: 26px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
       color: var(--muted); font-size: 13px;
     }
-    .footer a{ color: var(--accent-2); text-decoration: none; }
-    .footer a:hover{ text-decoration: underline; }
+    .footer a{ color: var(--accent-2); text-decoration:none; }
+    .footer a:hover{ text-decoration:underline; }
 
-    /* Accessibility */
-    a, button { outline: none; }
-    a:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+    a, button { outline:none; }
+    a:focus-visible{ outline: 2px solid var(--accent); outline-offset:2px; }
   </style>
 </head>
-
 <body>
   <main class="wrap">
-    <header class="header">
-      <span class="eyebrow">CS180 • Computer Vision and Computational Photography</span>
-      <h1 class="title">Project 1: Colorizing the Prokudin-Gorskii Photo Collection</h1>
-      <p class="subtitle">Aligning R/G/B channels from historical glass negatives to reconstruct full-color photographs.</p>
+    <header>
+      <span class="eyebrow">CS180 • Computer Vision & Computational Photography</span>
+      <h1>Project 1: Prokudin-Gorskii Colorization</h1>
+      <p class="subtitle">Registering historical B/G/R plates to reconstruct color images.</p>
 
-      <!-- Quick section anchors -->
-      <nav class="toc" aria-label="Page sections">
-        <a href="#overview">Overview</a>
-        <a href="#approach">Approach</a>
-        <a href="#results-examples">Results (Provided)</a>
-        <a href="#results-own">Results (Own)</a>
-        <a href="#failures">Failures & Why</a>
+      <nav class="toc" aria-label="Sections">
+        <a href="#overview">Overview & Approach</a>
+        <a href="#small">Small Images (Exhaustive)</a>
+        <a href="#large">Large Images (Pyramid)</a>
+        <a href="#provided-results">Provided Results + Offsets</a>
+        <a href="#own">My Chosen Images</a>
+        <a href="#failures">Failures & Debugging</a>
         <a href="#bells">Bells & Whistles</a>
         <a href="#submission">Submission</a>
       </nav>
     </header>
 
-    <!-- Overview -->
-    <section class="card" id="overview">
-      <h2><span class="kicker">Overview</span>What & Why</h2>
-      <p>
-        The Prokudin-Gorskii collection stores three monochrome exposures (B, G, R) captured through
-        color filters. To recover a color photo, we must <em>register</em> the channels so that the same
-        physical scene points align across layers. This write-up summarizes my pipeline, shows results on
-        the provided images, includes a few of my own, and documents failures and enhancements.
-      </p>
-      <div class="callout">
-        Deliverables covered below: overview &amp; approach, results on example images with offsets, additional images,
-        brief failure analysis, bells &amp; whistles with before/after, and a note on submitting to the gallery.
-      </div>
-    </section>
-
-    <!-- Approach -->
-    <section class="card" id="approach">
-      <h2><span class="kicker">Approach</span>Alignment Strategy & Implementation Notes</h2>
-      <p>
-        I treat the blue plate as the static reference and align green and red to it.
-        For small images I perform an exhaustive search over integer shifts in a window
-        (e.g., ±15 px). For larger images, I use a pyramid (image pyramid with downsampled
-        levels), refining from coarse to fine to keep runtime manageable.
-      </p>
-      <ul>
-        <li><strong>Similarity metric:</strong> NCC/SSIM (toggleable) after cropping borders to avoid edge artifacts.</li>
-        <li><strong>Pre-processing:</strong> intensity normalization; optional Sobel-edge alignment for texture-poor scenes.</li>
-        <li><strong>Search:</strong> coarse-to-fine displacements with a small local refinement at the final scale.</li>
-        <li><strong>Post:</strong> slight auto-contrast; optional white balance; border trimming.</li>
-      </ul>
-      <p>
-        If an image struggled, I tried: increasing crop %, switching to edge-based NCC, or expanding the coarse search radius.
-      </p>
-      <pre><code># Offsets are reported as (dy, dx) relative to Blue (B) as reference
-# Positive dy = shift down; positive dx = shift right</code></pre>
-    </section>
-
-    <!-- Results on provided examples -->
-    <section class="card" id="results-examples">
-      <h2><span class="kicker">Results</span>Provided Example Images (with Offsets)</h2>
-      <p>
-        Compressed previews only (PNG/JPG). Each caption lists the (G←B) and (R←B) offsets used to align channels.
-      </p>
-
-      <!-- Example grid (replace src with your outputs) -->
-      <div class="figgrid cols-2">
-        <figure>
-          <img src="./media/cathedral_color.jpg" alt="cathedral colorized result" />
-          <figcaption>
-            <strong>cathedral</strong> — G offset: <code>(-3, 2)</code>, R offset: <code>(-7, 3)</code>
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="./media/monastery_color.jpg" alt="monastery colorized result" />
-          <figcaption>
-            <strong>monastery</strong> — G offset: <code>(2, -3)</code>, R offset: <code>(4, -1)</code>
-          </figcaption>
-        </figure>
-
-        <figure>
-          <img src="./media/tobolsk_color.jpg" alt="tobolsk colorized result" />
-          <figcaption>
-            <strong>tobolsk</strong> — G offset: <code>(3, 1)</code>, R offset: <code>(6, 2)</code>
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="./media/emir_color.jpg" alt="emir colorized result" />
-          <figcaption>
-            <strong>emir</strong> — G offset: <code>(-2, 8)</code>, R offset: <code>(-4, 18)</code>
-          </figcaption>
-        </figure>
-      </div>
-
-      <!-- Offsets table (easy to scan) -->
-      <div class="table-wrap" aria-label="Offsets table">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>G offset (dy, dx)</th>
-              <th>R offset (dy, dx)</th>
-              <th>Notes</th>
-
+    <!-- OVERVIEW & APPROACH -->
+    <section id="overview"
