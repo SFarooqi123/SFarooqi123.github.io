@@ -101,4 +101,222 @@
 <body>
   <main class="wrap">
     <header>
-      <
+      <span class="eyebrow">CS180 • Computer Vision & Computational Photography</span>
+      <h1>Project 1: Prokudin-Gorskii Colorization</h1>
+      <p class="subtitle">Registering historical B/G/R plates to reconstruct color images.</p>
+    </header>
+
+    <!-- 1) OVERVIEW & APPROACH -->
+    <section class="card" id="overview">
+      <h2>Overview & Approach</h2>
+      <p>
+        Briefly describe the task and your strategy. Example: Align G and R to B using
+        <em>NCC</em> with mean-centering and border cropping. For large images, use a coarse-to-fine
+        pyramid (downsample ×½ until small, search, propagate offsets upward, refine in ±5 window).
+      </p>
+      <ul>
+        <li><strong>Preprocess:</strong> per-channel mean centering; crop ~10% to avoid plate borders.</li>
+        <li><strong>Search:</strong> small JPGs → exhaustive in [-15,15]; large TIFs → pyramid + narrow refinement.</li>
+        <li><strong>Transform:</strong> translate via <code>np.roll</code> but score only the internal (non-wrapped) region.</li>
+        <li><strong>Metric:</strong> NCC (optionally edge-based NCC for tricky cases like <em>emir</em>).</li>
+      </ul>
+    </section>
+
+    <!-- 2) SMALL IMAGES (EXHAUSTIVE) -->
+    <section class="card" id="small">
+      <h2><span class="kicker">Small</span>Exhaustive Alignment (JPGs)</h2>
+      <div class="figgrid cols-2">
+        <!-- Replace src and offsets -->
+        <figure>
+          <img src="./media/cathedral_color.jpg" alt="cathedral colorized" />
+          <figcaption>
+            <span class="name">cathedral.jpg</span> —
+            R <span class="off">(3, 12)</span> | G <span class="off">(2, 5)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/monastery_color.jpg" alt="monastery colorized" />
+          <figcaption>
+            <span class="name">monastery.jpg</span> —
+            R <span class="off">(2, 3)</span> | G <span class="off">(2, -3)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/tobolsk_color.jpg" alt="tobolsk colorized" />
+          <figcaption>
+            <span class="name">tobolsk.jpg</span> —
+            R <span class="off">(3, 6)</span> | G <span class="off">(3, 3)</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 3) LARGE IMAGES (PYRAMID) -->
+    <section class="card" id="large">
+      <h2><span class="kicker">Large</span>Pyramid Alignment (TIFs → compressed)</h2>
+      <p>Drop only compressed outputs (PNG/JPG). Put offsets directly in each caption.</p>
+      <div class="figgrid cols-2">
+        <!-- Add as many as you need; keep captions consistent -->
+        <figure>
+          <img src="./media/church_color.jpg" alt="church colorized" />
+          <figcaption>
+            <span class="name">church.tif</span> —
+            R <span class="off">(-4, 58)</span> | G <span class="off">(4, 25)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/harvesters_color.jpg" alt="harvesters colorized" />
+          <figcaption>
+            <span class="name">harvesters.tif</span> —
+            R <span class="off">(13, 124)</span> | G <span class="off">(17, 60)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/icon_color.jpg" alt="icon colorized" />
+          <figcaption>
+            <span class="name">icon.tif</span> —
+            R <span class="off">(23, 89)</span> | G <span class="off">(17, 41)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/italil_color.jpg" alt="italil colorized" />
+          <figcaption>
+            <span class="name">italil.tif</span> —
+            R <span class="off">(35, 77)</span> | G <span class="off">(21, 38)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/lastochikino_color.jpg" alt="lastochikino colorized" />
+          <figcaption>
+            <span class="name">lastochikino.tif</span> —
+            R <span class="off">(-9, 75)</span> | G <span class="off">(-2, -3)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/lugano_color.jpg" alt="lugano colorized" />
+          <figcaption>
+            <span class="name">lugano.tif</span> —
+            R <span class="off">(-29, 93)</span> | G <span class="off">(-16, 41)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/melons_color.jpg" alt="melons colorized" />
+          <figcaption>
+            <span class="name">melons.tif</span> —
+            R <span class="off">(13, 178)</span> | G <span class="off">(11, 82)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/self_portrait_color.jpg" alt="self portrait colorized" />
+          <figcaption>
+            <span class="name">self_portrait.tif</span> —
+            R <span class="off">(37, 176)</span> | G <span class="off">(29, 79)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/siren_color.jpg" alt="siren colorized" />
+          <figcaption>
+            <span class="name">siren.tif</span> —
+            R <span class="off">(-25, 96)</span> | G <span class="off">(-6, 49)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/three_generations_color.jpg" alt="three generations colorized" />
+          <figcaption>
+            <span class="name">three_generations.tif</span> —
+            R <span class="off">(11, 112)</span> | G <span class="off">(14, 53)</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 4) FAILURE CASES -->
+    <section class="card" id="failures">
+      <h2>Failures & Debugging</h2>
+      <p>
+        If an image failed to align, explain briefly why (e.g., inverted contrasts, low shared texture, motion between plates)
+        and what you tried (edge-based NCC, bigger coarse window, higher crop %, etc.).
+      </p>
+
+      <!-- Example emir slot -->
+      <div class="figgrid cols-2">
+        <figure>
+          <img src="./media/emir_color.jpg" alt="emir colorized" />
+          <figcaption>
+            <span class="name">emir.tif</span> —
+            R <span class="off">(40, 107)</span> | G <span class="off">(24, 49)</span><br>
+            <em>Note:</em> used edge maps + pyramid due to inverted intensities across channels.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/emir_edges.jpg" alt="emir edge map used for alignment" />
+          <figcaption><span class="name">Edge map</span> used for alignment (H/V 3×3 filters + threshold).</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 5) MY CHOSEN IMAGES -->
+    <section class="card" id="own">
+      <h2>Additional Images (My Picks)</h2>
+      <div class="figgrid cols-2">
+        <figure>
+          <img src="./media/mills_color.jpg" alt="mills colorized" />
+          <figcaption>
+            <span class="name">mills.tif</span> —
+            R <span class="off">(23, 125)</span> | G <span class="off">(14, 56)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/dome_color.jpg" alt="dome colorized" />
+          <figcaption>
+            <span class="name">dome.tif</span> —
+            R <span class="off">(-6, 125)</span> | G <span class="off">(-4, 52)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="./media/boat_color.jpg" alt="boat colorized" />
+          <figcaption>
+            <span class="name">boat.tif</span> —
+            R <span class="off">(81, 134)</span> | G <span class="off">(39, 42)</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 6) BELLS & WHISTLES -->
+    <section class="card" id="bells">
+      <h2>Bells & Whistles (Before/After)</h2>
+      <ul>
+        <li>Edge-guided alignment (Sobel-like 3×3 filters + binarization).</li>
+        <li>Auto-contrast via percentile clipping (≈1–2%).</li>
+        <li>Gray-world white balance to reduce color cast.</li>
+      </ul>
+      <div class="figgrid cols-2">
+        <figure>
+          <img src="./media/sample_before.jpg" alt="before" />
+          <figcaption><span class="name">Before</span> — unaligned stack.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/sample_after.jpg" alt="after" />
+          <figcaption><span class="name">After</span> — aligned + post (contrast/WB).</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 7) SUBMISSION NOTE -->
+    <section class="card" id="submission">
+      <h2>Submission</h2>
+      <p>
+        This page includes: overview & approach, results on provided images with offsets, extra examples, failure analysis,
+        and bells & whistles. Only compressed images are hosted (no <code>.tif</code>). I will submit this page URL to the class gallery.
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>© Samar Farooqi • Project 1</div>
+      <div><a href="../index.html">← Back to Portfolio</a></div>
+    </div>
+  </main>
+</body>
+</html>
