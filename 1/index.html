@@ -114,38 +114,37 @@
 
     <!-- EXPLANATION FIRST (like the example site) -->
     <section class="card" id="overview">
-      <h2>Overview</h2>
-      <p>
-        Sergey Prokudin-Gorskii photographed scenes through blue, green, and red filters on glass plates. This project
-        reconstructs color images by aligning Green and Red to the Blue plate, then stacking them into an RGB image.
-        The focus is on the alignment algorithm; images shown below are compressed (JPG/PNG/GIF) per assignment rules
-        — no large <code>.tif</code> files are uploaded.
-      </p>
-    </section>
+  <h2>Overview</h2>
+  <p>
+    Sergey Prokudin-Gorskii captured scenes through blue, green, and red filters on glass plates. This project reconstructs color images by aligning the Green and Red channels to the Blue channel, then stacking them into an RGB image. The focus is on implementing efficient alignment algorithms for both small and large images. Images shown below are compressed (JPG/PNG/GIF) per assignment rules — no large <code>.tif</code> files are uploaded.
+  </p>
+</section>
 
-    <section class="card" id="approach">
-      <h2>Approach</h2>
-      <h3>Small Images (Exhaustive Search)</h3>
-      <ul>
-        <li>Search window: integer shifts <code>(dy, dx) ∈ [-15, 15]</code>.</li>
-        <li>Pre-processing: per-channel mean-centering; crop ~10% from each edge to avoid black plate borders.</li>
-        <li>Transform: apply shifts with <code>np.roll</code>, but score only the internal (non-wrapped) region.</li>
-        <li>Metric: <strong>NCC</strong> (Normalized Cross Correlation) to reduce sensitivity to contrast differences.</li>
-      </ul>
+<section class="card" id="approach">
+  <h2>Approach</h2>
+  <h3>Small Images (Exhaustive Search)</h3>
+  <ul>
+    <li>Search window: integer shifts <code>(dy, dx) ∈ [-15, 15]</code>.</li>
+    <li>Pre-processing: per-channel mean-centering; crop ~6% from each edge to avoid black plate borders.</li>
+    <li>Transform: apply shifts with <code>np.roll</code>, but score only the internal (non-wrapped) region.</li>
+    <li>Metric: <strong>Sum of Squared Differences (SSD)</strong> to minimize intensity differences.</li>
+  </ul>
 
-      <h3>Large Images (Image Pyramid)</h3>
-      <ul>
-        <li>Downsample by ½ until the max dimension &lt; ≈500 px; run the same NCC search at the coarsest level.</li>
-        <li>Propagate the displacement up the pyramid (×2 each level) and refine in a narrow window (e.g., <code>[-5,5]</code>).</li>
-        <li>Apply a mild Gaussian blur before downsampling to preserve structure.</li>
-      </ul>
+  <h3>Large Images (Image Pyramid)</h3>
+  <ul>
+    <li>Downsample by ½ manually (using <code>image[::2, ::2]</code>) until either four levels are built or the smallest dimension reaches ~64 px.</li>
+    <li>Coarsest pass: at the lowest-resolution level, run an exhaustive search with a ±15 px window to get an initial shift.</li>
+    <li>Propagate upward: move to the next finer level, double the shift to account for the 2× change in scale.</li>
+    <li>Local refinement: refine the estimate in a small neighborhood of ±2 px around the doubled shift.</li>
+    <li>Final alignment: apply the final shifts to the uncropped Green and Red channels and stack into RGB.</li>
+  </ul>
 
-      <h3>Problems & How I Addressed Them</h3>
-      <ul>
-        <li><strong>Edge/Border bias</strong> → use interior crop before scoring.</li>
-        <li><strong>Inverted/channel-dependent contrast (e.g., <em>emir</em>)</strong> → align <em>edge maps</em> (H/V 3×3 filters, magnitude sum, optional threshold) instead of raw intensities.</li>
-        <li><strong>Low texture / ambiguous NCC peaks</strong> → larger coarse window; pyramid levels; edge-based NCC.</li>
-      </ul>
+  <h3>Problems & How We Addressed Them</h3>
+  <ul>
+    <li><strong>Edge/Border bias</strong> → crop ~6% of the interior before scoring to avoid artifacts caused by black plate borders.</li>
+    <li><strong>Low texture / ambiguous SSD peaks</strong> → larger coarse window; pyramid levels; propagate-and-refine alignment.</li>
+    <li><strong>Efficiency</strong> → manual downsampling and modular code for reusability.</li>
+  </ul>
 
       <pre><code># Offset convention used on this page:
 # Offsets are reported as (dy, dx) for G←B and R←B.
