@@ -221,60 +221,34 @@
       </div>
     </section>
 
-    <!-- Consolidated offsets table (after galleries, like the example page) -->
-    <section class="card" id="offsets-table">
-      <h2>Offsets (dy, dx) relative to Blue</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>G offset</th>
-              <th>R offset</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- JPGs -->
-            <tr><td>cathedral.jpg</td><td>(2, 5)</td><td>(3, 12)</td><td>Exhaustive, 10% crop.</td></tr>
-            <tr><td>monastery.jpg</td><td>(2, -3)</td><td>(2, 3)</td><td>Halo reduced by border trim.</td></tr>
-            <tr><td>tobolsk.jpg</td><td>(3, 3)</td><td>(3, 6)</td><td>Stable NCC peak.</td></tr>
-            <!-- TIFs (compressed) -->
-            <tr><td>church.tif</td><td>(4, 25)</td><td>(-4, 58)</td><td>Pyramid; narrow refine window.</td></tr>
-            <tr><td>harvesters.tif</td><td>(17, 60)</td><td>(13, 124)</td><td>Strong texture.</td></tr>
-            <tr><td>icon.tif</td><td>(17, 41)</td><td>(23, 89)</td><td>Border crop before scoring.</td></tr>
-            <tr><td>italil.tif</td><td>(21, 38)</td><td>(35, 77)</td><td>Typo as in dataset.</td></tr>
-            <tr><td>lastochikino.tif</td><td>(-2, -3)</td><td>(-9, 75)</td><td>Asymmetric borders.</td></tr>
-            <tr><td>lugano.tif</td><td>(-16, 41)</td><td>(-29, 93)</td><td>Coarse-to-fine helped.</td></tr>
-            <tr><td>melons.tif</td><td>(11, 82)</td><td>(13, 178)</td><td>Gray-world WB improved cast.</td></tr>
-            <tr><td>self_portrait.tif</td><td>(29, 79)</td><td>(37, 176)</td><td>Faces align well with NCC.</td></tr>
-            <tr><td>siren.tif</td><td>(-6, 49)</td><td>(-25, 96)</td><td>Water motion minimal.</td></tr>
-            <tr><td>three_generations.tif</td><td>(14, 53)</td><td>(11, 112)</td><td>Fine detail stabilizes NCC.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:10px">Only compressed images are displayed; original <code>.tif</code> files are not uploaded.</p>
-    </section>
-
-    <!-- Failures explanation -->
     <section class="card" id="failures">
-      <h2>Failure Cases & Explanations</h2>
-      <p>
-        If an image failed to align, provide a short reason and what you tried. Example:
-        <em>emir.tif</em> shows inverted/intense color differences across channels, making raw-intensity NCC unreliable.
-        I switched to edge-based alignment (H/V 3×3 filters, magnitude, threshold ≈0.2) and ran the pyramid search on the edge maps.
-      </p>
-      <div class="figgrid cols-2">
-        <figure>
-          <img src="./media/emir_color.jpg" alt="emir final colorized" />
-          <figcaption><span class="name">emir.tif</span> — G <span class="off">(24, 49)</span> | R <span class="off">(40, 107)</span></figcaption>
-        </figure>
-        <figure>
-          <img src="./media/emir_edges.jpg" alt="emir edge map used for alignment" />
-          <figcaption><span class="name">Edge map</span> used for alignment (H/V 3×3 + threshold).</figcaption>
-        </figure>
-      </div>
-    </section>
+  <h2>Failure Cases & Explanations</h2>
+  <p>
+    While the alignment algorithm worked well for most images, certain challenging cases required additional considerations. Below are explanations for why earlier methods struggled and how adjustments were made to improve results.
+  </p>
+  <ul>
+    <li>
+      <strong>Edge/Border Bias:</strong> Earlier methods failed to crop enough of the interior region, causing alignment to be influenced by black plate borders. This was addressed by cropping ~6% of the interior before scoring.
+    </li>
+    <li>
+      <strong>Low Texture / Ambiguous SSD Peaks:</strong> Images with low texture or repetitive patterns (e.g., <em>melons.tif</em>) caused the SSD metric to produce ambiguous peaks. Increasing the coarse search window and refining alignment at finer pyramid levels helped mitigate this issue.
+    </li>
+    <li>
+      <strong>Inverted/Channel-Dependent Contrast:</strong> Images like <em>self_portrait.tif</em> exhibited intense color differences across channels, making raw-intensity SSD unreliable. Switching to edge-based alignment (using horizontal/vertical filters and magnitude maps) improved results.
+    </li>
+  </ul>
+  <h3>Specific Failure Cases</h3>
+  <ul>
+    <li>
+      <strong>self_portrait.tif:</strong> Intense channel-dependent contrast made SSD unreliable.<br />
+      <strong>Solution:</strong> Used edge-based alignment (H/V 3×3 filters, magnitude maps).
+    </li>
+    <li>
+      <strong>melons.tif:</strong> Repetitive patterns caused ambiguous SSD peaks.<br />
+      <strong>Solution:</strong> Increased coarse search window and refined alignment at finer pyramid levels.
+    </li>
+  </ul>
+</section>
 
     <!-- Your own chosen images -->
     <section class="card" id="own">
