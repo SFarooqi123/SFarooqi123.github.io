@@ -116,7 +116,7 @@
     <section class="card" id="overview">
   <h2>Overview</h2>
   <p>
-    Sergey Prokudin-Gorskii captured scenes through blue, green, and red filters on glass plates. This project reconstructs color images by aligning the Green and Red channels to the Blue channel, then stacking them into an RGB image. The focus is on implementing efficient alignment algorithms for both small and large images. Images shown below are compressed (JPG/PNG/GIF) per assignment rules — no large <code>.tif</code> files are uploaded.
+    Sergey Prokudin-Gorskii captured scenes through blue, green, and red filters on glass plates. This project reconstructs color images by aligning the Green and Red channels to the Blue channel, then stacking them into an RGB image. The focus is on implementing efficient alignment algorithms for both small and large images. 
   </p>
 </section>
 
@@ -139,7 +139,7 @@
     <li>Final alignment: apply the final shifts to the uncropped Green and Red channels and stack into RGB.</li>
   </ul>
 
-  <h3>Problems & How We Addressed Them</h3>
+  <h3>Problems & How I Addressed Them</h3>
   <ul>
     <li><strong>Edge/Border bias</strong> → crop ~6% of the interior before scoring to avoid artifacts caused by black plate borders.</li>
     <li><strong>Low texture / ambiguous SSD peaks</strong> → larger coarse window; pyramid levels; propagate-and-refine alignment.</li>
