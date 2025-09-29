@@ -245,23 +245,48 @@ def create_finite_difference_operators():
   <section class="card" id="part2-4">
     <h2>Part 2.4: Multiresolution Blending (Oraple & Beyond)</h2>
     <h3>Vertical/Horizontal Seam (Oraple)</h3>
-    <figure><img src="oraple.jpg" alt="Oraple result"><figcaption>My Oraple blend</figcaption></figure>
+    <figure><img src="oraple_blended.png" alt="Oraple result"><figcaption>My Oraple blend</figcaption></figure>
 
     <h3>Irregular Mask Blends</h3>
-    <p>Examples with creative blends (e.g., nature + urban, surreal hybrids).</p>
-    <div class="figgrid cols-2">
-      <figure><img src="blend_input1.jpg" alt="input A"><figcaption>Input A</figcaption></figure>
-      <figure><img src="blend_input2.jpg" alt="input B"><figcaption>Input B</figcaption></figure>
-    </div>
-    <figure><img src="blend_result.jpg" alt="irregular mask blend"><figcaption>Blend with irregular mask</figcaption></figure>
+<p>Examples with creative blends using irregular masks (heart, circular, off-center, etc.).</p>
 
-    <h3>Laplacian Stack Visualization for Favorite Blend</h3>
-    <div class="figgrid cols-3">
-      <figure><img src="lap_stack_level1.jpg" alt="Laplacian level 1"><figcaption>Laplacian L1</figcaption></figure>
-      <figure><img src="lap_stack_level2.jpg" alt="Laplacian level 2"><figcaption>Laplacian L2</figcaption></figure>
-      <figure><img src="lap_stack_level3.jpg" alt="Laplacian level 3"><figcaption>Laplacian L3</figcaption></figure>
-    </div>
-  </section>
+<div class="figgrid cols-2">
+  <figure>
+    <img src="pizza_earth_corner_heart_blend.png" alt="Pizza + Earth heart corner blend">
+    <figcaption><span class="name">Pizza + Earth (corner heart)</span></figcaption>
+  </figure>
+  <figure>
+    <img src="pizza_earth_heart_blend.png" alt="Pizza + Earth heart blend">
+    <figcaption><span class="name">Pizza + Earth (center heart)</span></figcaption>
+  </figure>
+  <figure>
+    <img src="pizza_planet_circular_blend.png" alt="Pizza + Planet circular blend">
+    <figcaption><span class="name">Pizza + Planet (circular)</span></figcaption>
+  </figure>
+  <figure>
+    <img src="possum_moon_off-center_circle_blend.png" alt="Possum + Moon off-center blend">
+    <figcaption><span class="name">Possum + Moon (off-center circle)</span></figcaption>
+  </figure>
+  <figure>
+    <img src="love_for_car_&_possum_heart_blend.png" alt="Car + Possum heart blend">
+    <figcaption><span class="name">Car + Possum (heart mask)</span></figcaption>
+  </figure>
+  <figure>
+    <img src="car_possum_normal_blend.png" alt="Car + Possum normal blend">
+    <figcaption><span class="name">Car + Possum (straight seam)</span></figcaption>
+  </figure>
+  <figure>
+    <img src="car_possum_planet_circular_blend.png" alt="Car + Possum planet circular blend">
+    <figcaption><span class="name">Car + Possum + Planet (circular mask)</span></figcaption>
+  </figure>
+</div>
+
+<h3>Laplacian Stack Visualization for Favorite Blend</h3>
+<p>Visualization of the Laplacian stack decomposition for my favorite result (<em>Car + Possum Normal Blend</em>), similar to Figure 10 in the paper.</p>
+<figure>
+  <img src="car_possum_normal_figure10_process.png" alt="Car + Possum Laplacian stack process">
+  <figcaption><span class="name">Car + Possum (Figure 10 style process visualization)</span></figcaption>
+</figure>
 
   <div class="footer">
     <div>Samar Farooqi • Project 2</div>
