@@ -87,7 +87,78 @@
 
     <h3>1.1 Convolutions from Scratch</h3>
     <p>Implemented convolution manually with loops, compared to <code>scipy.signal.convolve2d</code>. Also tested with a 9×9 box filter and finite difference operators.</p>
-    <pre><code># Placeholder code snippet: manual convolution</code></pre>
+    <pre><code>def convolution_2loop(image, kernel, padding='zero'):
+    """
+    Convolution implementation using 2 loops (optimized).
+    
+    Args:
+        image: 2D numpy array (grayscale image)
+        kernel: 2D numpy array (convolution kernel)
+        padding: 'zero' for zero padding, 'none' for no padding
+    
+    Returns:
+        2D numpy array (convolved image)
+    """
+    img_h, img_w = image.shape
+    ker_h, ker_w = kernel.shape
+    
+    # Calculate padding
+    pad_h = ker_h // 2
+    pad_w = ker_w // 2
+    
+    if padding == 'zero':
+        # Add zero padding
+        padded_img = np.zeros((img_h + 2*pad_h, img_w + 2*pad_w))
+        padded_img[pad_h:pad_h+img_h, pad_w:pad_w+img_w] = image
+        output_h, output_w = img_h, img_w
+        start_h, start_w = 0, 0
+    else:  # no padding
+        padded_img = image
+        output_h, output_w = img_h - ker_h + 1, img_w - ker_w + 1
+        start_h, start_w = 0, 0
+    
+    # Initialize output
+    result = np.zeros((output_h, output_w))
+    
+    # 2-loop convolution using numpy operations
+    for i in range(output_h):
+        for j in range(output_w):
+            # Extract the patch
+            patch = padded_img[start_h + i:start_h + i + ker_h, 
+                              start_w + j:start_w + j + ker_w]
+            # Element-wise multiplication and sum
+            result[i, j] = np.sum(patch * kernel)
+    
+    return result
+
+def create_box_filter(size):
+    """
+    Create a box filter (averaging filter) of given size.
+    
+    Args:
+        size: int, size of the square filter (e.g., 9 for 9x9)
+    
+    Returns:
+        2D numpy array (box filter)
+    """
+    return np.ones((size, size)) / (size * size)
+
+def create_finite_difference_operators():
+    """
+    Create finite difference operators for edge detection.
+    
+    Returns:
+        tuple: (Dx, Dy) - horizontal and vertical difference operators
+    """
+    # Dx: horizontal difference operator (1x3 row vector)
+    Dx = np.array([[1, 0, -1]])
+    
+    # Dy: vertical difference operator (3x1 column vector)
+    Dy = np.array([[1],
+                   [0],
+                   [-1]])
+    
+    return Dx, Dy</code></pre>
     <div class="figgrid cols-2">
       <figure><img src="me_original.jpg" alt="self convolved with 9x9 box filter"><figcaption>Original image of me </figcaption></figure>
       <figure><img src="me_box_filter.jpg" alt="self derivative filters"><figcaption>Me with box filter applied</figcaption></figure>
