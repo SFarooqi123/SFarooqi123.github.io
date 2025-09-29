@@ -182,6 +182,7 @@ def create_finite_difference_operators():
     <h3>1.3 Derivative of Gaussian (DoG)</h3>
     <h4></h4>
     <p>Smoothed with Gaussian and compare to finite difference results.</p?
+    <p>The comparison between Gaussian smoothing + finite differences versus Derivative of Gaussian (DoG) filters on the cameraman image reveals that both methods produce functionally identical results with minimal visual differences. The key advantage of DoG is computational efficiency - it requires only one convolution per direction compared to two for the Gaussian method, making it approximately 2x faster. While the Gaussian method produces slightly smoother, more continuous edges due to explicit smoothing, the DoG method generates equivalent gradient magnitude and edge detection results with marginally more graininess. Both methods show identical sensitivity to the σ parameter, and the DoG filters (visualized as center-positive, surround-negative patterns) are more memory-efficient and conceptually simpler to implement. The choice between methods should be based on computational constraints rather than quality differences, with DoG being preferred for production systems where performance matters.</p>
     <div class="figgrid cols-3">
       <figure><img src="cameraman_smoothed_partial_x.jpg" alt="DoG X"><figcaption>Smoothed gausian Cameraman in X</figcaption></figure>
       <figure><img src="cameraman_smoothed_partial_y.jpg" alt="DoG Y"><figcaption>Smoothed gausian Cameraman in Y</figcaption></figure>
@@ -202,6 +203,11 @@ def create_finite_difference_operators():
     <h2>Part 2: Fun with Frequencies</h2>
     <h3>2.1 Image Sharpening</h3>
     <p>Implemented unsharp masking. Tested on blurry & sharp images.</p>
+    <p>How Unsharp Mask Works in Relation to Blur Filters and High Frequencies
+      The unsharp mask filter works by first creating a blurred version of your image (like looking at it through slightly foggy glasses), then comparing this blurry version to the original sharp image to find the "high-frequency details" - essentially the edges, textures, and fine details that make things look crisp and clear. The filter then takes these high-frequency details and adds them back to the original image, but makes them stronger, which makes the whole image appear sharper. Think of it like this: if your original image is a drawing, the blur filter creates a "soft" version, and the unsharp mask finds all the sharp lines and details that got lost in the blur, then makes those lines even more prominent in the final result. It's called "unsharp" because it uses a blur (which removes sharpness) to create sharpness - it's counterintuitive but effective.</p>
+    <p>Demonstrating How Varying the Sharpening Amount Changes the Result
+Varying Sharpening Amount Effects:
+When you change the sharpening amount (often called the "strength" or "amount" parameter), you're essentially controlling how much of those high-frequency details get added back to the image. With low sharpening amounts (like 0.5 or 1.0), you get subtle enhancement - the image looks slightly crisper but still natural. With medium amounts (2.0-3.0), you get noticeable sharpening that makes edges pop and textures more defined, which is great for making photos look more professional. With high amounts (4.0+), you get aggressive sharpening where edges become very pronounced, almost like they're outlined, but this can also introduce unwanted artifacts like halos around edges or make the image look over-processed and unnatural. The key is finding the sweet spot where the image looks sharper and more detailed without looking artificial or having visible processing artifacts.</p>
     <div class="figgrid cols-2">
       <figure><img src="taj_original.jpg" alt="Taj original"><figcaption>Original Taj</figcaption></figure>
       <figure><img src="taj_sharpened_sigma1.0_amount1.0.jpg" alt="Taj sharpened"><figcaption>Sharpened Taj</figcaption></figure>
