@@ -283,34 +283,6 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     </ul>
   </section>
 
-  <!-- IMPLEMENTATION SUMMARY -->
-  <section class="card" id="summary">
-    <h2>Implementation Summary</h2>
-    
-    <h3>What I Learned</h3>
-    <p>This project provided hands-on experience with fundamental computer vision concepts:</p>
-    <ul>
-      <li><strong>Projective geometry:</strong> Understanding how 3D scenes project to 2D images</li>
-      <li><strong>Homography estimation:</strong> Solving overdetermined linear systems with SVD</li>
-      <li><strong>Image warping:</strong> Implementing inverse warping and interpolation from scratch</li>
-      <li><strong>Image blending:</strong> Creating seamless composites with distance-based weighting</li>
-      <li><strong>Numerical stability:</strong> Importance of point normalization in matrix computations</li>
-    </ul>
-
-    <h3>Key Technical Achievements</h3>
-    <ul>
-      <li>✅ Custom homography computation (no <code>cv2.findHomography</code>)</li>
-      <li>✅ Two interpolation methods from scratch (no <code>scipy.interpolate</code>)</li>
-      <li>✅ Inverse warping to avoid holes in output</li>
-      <li>✅ Distance-based alpha blending for seamless mosaics</li>
-      <li>✅ Automatic bounding box computation for arbitrary transformations</li>
-      <li>✅ Efficient processing of high-resolution images (4320×3240)</li>
-    </ul>
-
-    <h3>Coolest Thing</h3>
-    <p>The most impressive aspect was seeing how a simple mathematical transformation (a 3×3 matrix) can seamlessly stitch together two separate photographs into a single wide-angle panorama. The fact that <strong>10 carefully selected points</strong> are sufficient to compute this transformation, and that <strong>weighted blending</strong> can make the seam completely invisible, demonstrates the power of geometric computer vision techniques.</p>
-  </section>
-
   <div class="footer">
     <div>Samar Farooqi • CS180 Project 3</div>
     <div><a href="../index.html">← Back to Portfolio</a></div>
