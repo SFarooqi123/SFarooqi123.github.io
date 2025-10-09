@@ -1,1 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 3 – Auto Stitching and Image Mosaics</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #0b1113;
+      --panel: #0f1719;
+      --panel-2: #101c1f;
+      --text: #e7f0f2;
+      --muted: #9cb3b9;
+      --accent: #18b0b0;
+      --accent-2: #ffc857;
+      --ring: #1e2a2d;
+      --code: #0f2430;
+      --radius: 18px;
+      --maxw: 1000px;
+    }
+    * { box-sizing: border-box; }
+    body{
+      margin: 0; font-family: 'Outfit', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 800px at 50% -220px, #0e1517 10%, var(--bg) 60%);
+      color: var(--text); -webkit-font-smoothing: antialiased; line-height: 1.6;
+    }
+    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 42px 20px 80px; }
+    header{ text-align:center; margin-bottom: 22px; }
+    .eyebrow{
+      display:inline-block; padding:4px 10px; border-radius:999px;
+      background:rgba(24,176,176,.14); color:#b6f3f3; border:1px solid rgba(24,176,176,.35);
+      font-size:12px; letter-spacing:.35px; text-transform:uppercase; margin-bottom:10px;
+    }
+    h1{
+      margin:0 0 6px; font-size:clamp(26px,4.6vw,40px); font-weight:700;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .subtitle{ margin:0; color:var(--muted); font-size:14.5px; }
+    .card{
+      background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);
+      border:1px solid var(--ring); border-radius:var(--radius);
+      padding:18px 18px 22px; margin:18px 0;
+      box-shadow:0 14px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .card h2{ font-size:20px; font-weight:700; margin:0 0 12px; color:#d9fdff; }
+    .card h3{ font-size:16px; margin:10px 0 8px; color:#d9fdff; }
+    .card p, .card ul{ color:var(--muted); font-size:15px; margin:8px 0; }
+    .card ul{ padding-left: 20px; }
+    .card li{ margin: 6px 0; }
+    .figgrid{ display:grid; gap:16px; }
+    @media(min-width:760px){
+      .figgrid.cols-2{ grid-template-columns:1fr 1fr; }
+      .figgrid.cols-3{ grid-template-columns:1fr 1fr 1fr; }
+    }
+    figure{ margin:0; background:#0e1517; border:1px solid #1b2629; border-radius:14px; overflow:hidden; }
+    figure img{ width:100%; height:auto; display:block; }
+    figcaption{ padding:10px 12px; color:#b7c7cb; font-size:13px; line-height:1.4;
+      font-family:"Source Serif 4", ui-serif, Georgia, serif;
+      border-top:1px solid #172124; background:linear-gradient(180deg,#0f1618,#0b1214);
+    }
+    code, pre{
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      background: var(--code); color: #c6f3ff; border: 1px solid #18303d;
+      border-radius: 10px; padding: 4px 7px; font-size: 13px;
+    }
+    pre{ padding:10px 12px; overflow:auto; line-height: 1.5; }
+    .matrix-display {
+      background: var(--code);
+      border: 1px solid #18303d;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 12px 0;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      color: #c6f3ff;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+    .footer{ margin-top:26px; display:flex; justify-content:space-between; flex-wrap:wrap;
+      color:var(--muted); font-size:13px; }
+    .footer a{ color:var(--accent-2); text-decoration:none; }
+    .footer a:hover{ text-decoration:underline; }
+    .highlight{ color: var(--accent-2); font-weight: 600; }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <span class="eyebrow">CS180 • Computer Vision & Computational Photography</span>
+    <h1>Project 1: Image Mosaicing</h1>
+    <p class="subtitle">Projective transformations, homography computation, image warping, and panorama stitching.</p>
+  </header>
+
+  <!-- PART A.1: IMAGE ACQUISITION -->
+  <section class="card" id="part-a1">
+    <h2>Part A.1: Shoot and Digitize Pictures</h2>
+    <p>Captured two photographs of a park scene with a projective transformation between them. The camera was rotated around a fixed center of projection, creating approximately 60-70% overlap between the views.</p>
+    
+    <h3>Source Images</h3>
+    <div class="figgrid cols-2">
+      <figure>
+        <img src="results/part_a1/source_image1.jpg" alt="Source Image 1">
+        <figcaption>Image 1: Left view (3240×4320 pixels)</figcaption>
+      </figure>
+      <figure>
+        <img src="results/part_a1/source_image2.jpg" alt="Source Image 2">
+        <figcaption>Image 2: Right view (3240×4320 pixels)</figcaption>
+      </figure>
+    </div>
+
+    <h3>Capture Method</h3>
+    <ul>
+      <li><strong>Transformation type:</strong> Projective (homography)</li>
+      <li><strong>Camera motion:</strong> Rotation around vertical axis from fixed position</li>
+      <li><strong>Overlap:</strong> Approximately 60-70% between consecutive images</li>
+      <li><strong>Scene:</strong> Outdoor park with trees and grass</li>
+    </ul>
+  </section>
+
+  <!-- PART A.2: RECOVER HOMOGRAPHIES -->
+  <section class="card" id="part-a2">
+    <h2>Part A.2: Recover Homographies</h2>
+    <p>Implemented <code>computeH(im1_pts, im2_pts)</code> to compute the 3×3 homography matrix <strong>H</strong> that maps points from Image 2 to Image 1 coordinates. The homography is recovered by solving an overdetermined linear system using SVD.</p>
+
+    <h3>Point Correspondences</h3>
+    <p>Manually selected <span class="highlight">10 matching points</span> between the two images, identifying distinctive features like tree trunks, branches, and ground features visible in both views.</p>
+    
+    <figure>
+      <img src="results/part_a2/correspondences_visualization.png" alt="Point Correspondences">
+      <figcaption>Point correspondences visualized on both images. Each numbered point in Image 1 corresponds to the same numbered point in Image 2.</figcaption>
+    </figure>
+
+    <h3>Homography Computation</h3>
+    <p>The homography equation for each point correspondence (x, y) → (x', y') gives two linear equations:</p>
+    <pre>h₁₁x + h₁₂y + h₁₃ - h₃₁xx' - h₃₂yx' = x'
+h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
+    
+    <p>With <strong>n</strong> point correspondences, we get a <strong>2n × 9</strong> system matrix <strong>A</strong>. For 10 points, this gives a <strong>20 × 9</strong> overdetermined system solved using SVD.</p>
+
+    <h3>Recovered Homography Matrix</h3>
+    <div class="matrix-display">
+<strong>H</strong> = [  0.8112845180   -0.0521117477   -279.8414438218 ]
+    [ -0.0443445747    0.8355288830     50.3470349009 ]
+    [ -0.0001092920   -0.0000921779      1.0000000000 ]
+    </div>
+
+    <h3>Reprojection Error Analysis</h3>
+    <ul>
+      <li><strong>Mean error:</strong> <span class="highlight">7.65 pixels</span></li>
+      <li><strong>Mean squared error:</strong> 103.37</li>
+      <li><strong>Max error:</strong> 21.47 pixels</li>
+      <li><strong>Min error:</strong> 1.53 pixels</li>
+    </ul>
+    <p>The mean error of 7.65 pixels is acceptable given the high resolution (4320×3240) images and manual point selection.</p>
+
+    <h3>Implementation Details</h3>
+    <ul>
+      <li>Used <strong>point normalization</strong> for numerical stability</li>
+      <li>Solved <strong>Ah = 0</strong> using SVD (right singular vector for smallest singular value)</li>
+      <li>No high-level functions used (e.g., <code>cv2.findHomography</code>)</li>
+      <li>System matrix <strong>A</strong> has shape (20, 9) for 10 correspondences</li>
+    </ul>
+  </section>
+
+  <!-- PART A.3: WARP THE IMAGES -->
+  <section class="card" id="part-a3">
+    <h2>Part A.3: Warp the Images</h2>
+    <p>Implemented two custom warping functions using <strong>inverse warping</strong> to avoid holes in the output:</p>
+    <ul>
+      <li><code>warpImageNearestNeighbor(im, H)</code> - Rounds coordinates to nearest pixel</li>
+      <li><code>warpImageBilinear(im, H)</code> - Weighted average of 4 neighboring pixels</li>
+    </ul>
+
+    <h3>Interpolation Methods Comparison</h3>
+    <figure>
+      <img src="results/part_a3/warping_comparison_panorama.png" alt="Warping Comparison">
+      <figcaption>Comparison of original Image 2 with both interpolation methods applied.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="results/part_a3/interpolation_quality_zoom.png" alt="Interpolation Quality Zoom">
+      <figcaption>Zoomed comparison showing interpolation quality differences. Bilinear produces smoother edges.</figcaption>
+    </figure>
+
+    <h3>Speed vs Quality Trade-offs</h3>
+    <div class="figgrid cols-2">
+      <div>
+        <h4 style="color: #d9fdff; margin-top: 0;">Nearest Neighbor</h4>
+        <ul>
+          <li><strong>Speed:</strong> ~10 seconds (baseline)</li>
+          <li><strong>Quality:</strong> Blocky, visible pixelation</li>
+          <li><strong>Best for:</strong> Quick previews, debugging</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #d9fdff; margin-top: 0;">Bilinear</h4>
+        <ul>
+          <li><strong>Speed:</strong> ~33 seconds (3.24× slower)</li>
+          <li><strong>Quality:</strong> Smooth, anti-aliased edges</li>
+          <li><strong>Best for:</strong> Final output, mosaics</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Rectification Example</h3>
+    <p>To verify the warping implementation, we performed <strong>rectification</strong> - transforming a tilted perspective view into a frontal rectangular view.</p>
+    
+    <figure>
+      <img src="results/part_a3/rectify_example1_comparison.png" alt="Rectification Example">
+      <figcaption>Rectification of a perspective-distorted rectangle. Original (left) shows a tilted quadrilateral; warped versions (center: nearest neighbor, right: bilinear) show the rectified rectangle.</figcaption>
+    </figure>
+
+    <h3>Implementation Notes</h3>
+    <ul>
+      <li><strong>Inverse warping:</strong> For each output pixel, find corresponding source location</li>
+      <li><strong>Bilinear formula:</strong> I(x,y) = (1-wₓ)(1-wᵧ)I(x₀,y₀) + wₓ(1-wᵧ)I(x₁,y₀) + (1-wₓ)wᵧI(x₀,y₁) + wₓwᵧI(x₁,y₁)</li>
+      <li><strong>Bounding box:</strong> Computed by transforming image corners through H</li>
+      <li><strong>No library functions:</strong> Custom interpolation from scratch (no <code>scipy.interpolate</code>)</li>
+    </ul>
+  </section>
+
+  <!-- PART A.4: BLEND IMAGES INTO MOSAIC -->
+  <section class="card" id="part-a4">
+    <h2>Part A.4: Blend Images into a Mosaic</h2>
+    <p>Created a seamless panorama by warping Image 2 to align with Image 1 and blending them using distance-based weighted averaging.</p>
+
+    <h3>Panorama Mosaic Result</h3>
+    <figure>
+      <img src="results/part_a4/panorama_complete_result.png" alt="Panorama Result">
+      <figcaption>Complete panorama mosaicing result showing source images and final stitched panorama (11451×13960 pixels).</figcaption>
+    </figure>
+
+    <h3>Blending Procedure</h3>
+    <p>To achieve smooth transitions and avoid visible seams, we use <strong>distance-based alpha blending</strong>:</p>
+    
+    <ol style="color: var(--muted); margin-left: 20px;">
+      <li><strong>Warp images:</strong> Apply homography to Image 2 using bilinear interpolation</li>
+      <li><strong>Create alpha channels:</strong> Use distance transform to compute pixel weights
+        <ul>
+          <li>α = min(distance_from_edge / max_distance, 1.0)</li>
+          <li>Pixels near image centers get higher weight</li>
+          <li>Pixels near edges get lower weight</li>
+        </ul>
+      </li>
+      <li><strong>Weighted averaging:</strong> Blend overlapping regions
+        <ul>
+          <li>result = (img₁ × α₁ + img₂ × α₂) / (α₁ + α₂)</li>
+          <li>Smooth gradual transition in overlap</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Alpha Channel Visualization</h3>
+    <figure>
+      <img src="results/part_a4/panorama_alpha_channels.png" alt="Alpha Channels">
+      <figcaption>Distance-based alpha channels for both images. Brighter areas indicate higher weight in blending. The smooth falloff ensures seamless transitions.</figcaption>
+    </figure>
+
+    <h3>Why Distance-Based Blending?</h3>
+    <ul>
+      <li><strong>Automatic:</strong> No manual seam selection required</li>
+      <li><strong>Smooth transitions:</strong> Gradual weight change prevents visible edges</li>
+      <li><strong>No ghosting:</strong> Weighted averaging reduces double-image artifacts</li>
+      <li><strong>Robust:</strong> Works well with slight misalignments</li>
+    </ul>
+
+    <h3>Additional Mosaics</h3>
+    <div class="figgrid cols-2">
+      <figure>
+        <img src="results/part_a4/mosaic2_vertical_result.png" alt="Vertical Mosaic">
+        <figcaption>Mosaic 2: Vertical panorama (synthetic example)</figcaption>
+      </figure>
+      <figure>
+        <img src="results/part_a4/mosaic3_rotational_final.jpg" alt="Rotational Mosaic">
+        <figcaption>Mosaic 3: Rotational panorama demonstrating projective transformations</figcaption>
+      </figure>
+    </div>
+
+    <h3>Technical Highlights</h3>
+    <ul>
+      <li><strong>Canvas sizing:</strong> Automatically computed to fit all warped images</li>
+      <li><strong>Blend width:</strong> 100 pixels for smooth transitions</li>
+      <li><strong>Final dimensions:</strong> 11,451 × 13,960 pixels for main panorama</li>
+      <li><strong>Processing time:</strong> ~33 seconds for warping + ~5 seconds for blending</li>
+    </ul>
+  </section>
+
+  <!-- IMPLEMENTATION SUMMARY -->
+  <section class="card" id="summary">
+    <h2>Implementation Summary</h2>
+    
+    <h3>What I Learned</h3>
+    <p>This project provided hands-on experience with fundamental computer vision concepts:</p>
+    <ul>
+      <li><strong>Projective geometry:</strong> Understanding how 3D scenes project to 2D images</li>
+      <li><strong>Homography estimation:</strong> Solving overdetermined linear systems with SVD</li>
+      <li><strong>Image warping:</strong> Implementing inverse warping and interpolation from scratch</li>
+      <li><strong>Image blending:</strong> Creating seamless composites with distance-based weighting</li>
+      <li><strong>Numerical stability:</strong> Importance of point normalization in matrix computations</li>
+    </ul>
+
+    <h3>Key Technical Achievements</h3>
+    <ul>
+      <li>✅ Custom homography computation (no <code>cv2.findHomography</code>)</li>
+      <li>✅ Two interpolation methods from scratch (no <code>scipy.interpolate</code>)</li>
+      <li>✅ Inverse warping to avoid holes in output</li>
+      <li>✅ Distance-based alpha blending for seamless mosaics</li>
+      <li>✅ Automatic bounding box computation for arbitrary transformations</li>
+      <li>✅ Efficient processing of high-resolution images (4320×3240)</li>
+    </ul>
+
+    <h3>Coolest Thing</h3>
+    <p>The most impressive aspect was seeing how a simple mathematical transformation (a 3×3 matrix) can seamlessly stitch together two separate photographs into a single wide-angle panorama. The fact that <strong>10 carefully selected points</strong> are sufficient to compute this transformation, and that <strong>weighted blending</strong> can make the seam completely invisible, demonstrates the power of geometric computer vision techniques.</p>
+  </section>
+
+  <div class="footer">
+    <div>Samar Farooqi • CS180 Project 1</div>
+    <div><a href="../index.html">← Back to Portfolio</a></div>
+  </div>
+</main>
+</body>
+</html>
+
 
