@@ -91,7 +91,7 @@
 <main class="wrap">
   <header>
     <span class="eyebrow">CS180 • Computer Vision & Computational Photography</span>
-    <h1>Project 1: Image Mosaicing</h1>
+    <h1>Project 3 – Auto Stitching and Image Mosaics</h1>
     <p class="subtitle">Projective transformations, homography computation, image warping, and panorama stitching.</p>
   </header>
 
@@ -103,11 +103,11 @@
     <h3>Source Images</h3>
     <div class="figgrid cols-2">
       <figure>
-        <img src="results/part_a1/source_image1.jpg" alt="Source Image 1">
+        <img src="source_image1.jpg" alt="Source Image 1">
         <figcaption>Image 1: Left view (3240×4320 pixels)</figcaption>
       </figure>
       <figure>
-        <img src="results/part_a1/source_image2.jpg" alt="Source Image 2">
+        <img src="source_image2.jpg" alt="Source Image 2">
         <figcaption>Image 2: Right view (3240×4320 pixels)</figcaption>
       </figure>
     </div>
@@ -130,7 +130,7 @@
     <p>Manually selected <span class="highlight">10 matching points</span> between the two images, identifying distinctive features like tree trunks, branches, and ground features visible in both views.</p>
     
     <figure>
-      <img src="results/part_a2/correspondences_visualization.png" alt="Point Correspondences">
+      <img src="correspondences_visualization.png" alt="Point Correspondences">
       <figcaption>Point correspondences visualized on both images. Each numbered point in Image 1 corresponds to the same numbered point in Image 2.</figcaption>
     </figure>
 
@@ -177,12 +177,12 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
 
     <h3>Interpolation Methods Comparison</h3>
     <figure>
-      <img src="results/part_a3/warping_comparison_panorama.png" alt="Warping Comparison">
+      <img src="warping_comparison_panorama.png" alt="Warping Comparison">
       <figcaption>Comparison of original Image 2 with both interpolation methods applied.</figcaption>
     </figure>
 
     <figure>
-      <img src="results/part_a3/interpolation_quality_zoom.png" alt="Interpolation Quality Zoom">
+      <img src="interpolation_quality_zoom.png" alt="Interpolation Quality Zoom">
       <figcaption>Zoomed comparison showing interpolation quality differences. Bilinear produces smoother edges.</figcaption>
     </figure>
 
@@ -210,7 +210,7 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     <p>To verify the warping implementation, we performed <strong>rectification</strong> - transforming a tilted perspective view into a frontal rectangular view.</p>
     
     <figure>
-      <img src="results/part_a3/rectify_example1_comparison.png" alt="Rectification Example">
+      <img src="rectify_example1_comparison.png" alt="Rectification Example">
       <figcaption>Rectification of a perspective-distorted rectangle. Original (left) shows a tilted quadrilateral; warped versions (center: nearest neighbor, right: bilinear) show the rectified rectangle.</figcaption>
     </figure>
 
@@ -230,7 +230,7 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
 
     <h3>Panorama Mosaic Result</h3>
     <figure>
-      <img src="results/part_a4/panorama_complete_result.png" alt="Panorama Result">
+      <img src="panorama_mosaic_final.jpg" alt="Panorama Result">
       <figcaption>Complete panorama mosaicing result showing source images and final stitched panorama (11451×13960 pixels).</figcaption>
     </figure>
 
@@ -254,12 +254,6 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
       </li>
     </ol>
 
-    <h3>Alpha Channel Visualization</h3>
-    <figure>
-      <img src="results/part_a4/panorama_alpha_channels.png" alt="Alpha Channels">
-      <figcaption>Distance-based alpha channels for both images. Brighter areas indicate higher weight in blending. The smooth falloff ensures seamless transitions.</figcaption>
-    </figure>
-
     <h3>Why Distance-Based Blending?</h3>
     <ul>
       <li><strong>Automatic:</strong> No manual seam selection required</li>
@@ -272,11 +266,11 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     <div class="figgrid cols-2">
       <figure>
         <img src="results/part_a4/mosaic2_vertical_result.png" alt="Vertical Mosaic">
-        <figcaption>Mosaic 2: Vertical panorama (synthetic example)</figcaption>
+        <figcaption>Todo: </figcaption>
       </figure>
       <figure>
         <img src="results/part_a4/mosaic3_rotational_final.jpg" alt="Rotational Mosaic">
-        <figcaption>Mosaic 3: Rotational panorama demonstrating projective transformations</figcaption>
+        <figcaption>ToDo: </figcaption>
       </figure>
     </div>
 
@@ -318,7 +312,7 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
   </section>
 
   <div class="footer">
-    <div>Samar Farooqi • CS180 Project 1</div>
+    <div>Samar Farooqi • CS180 Project 3</div>
     <div><a href="../index.html">← Back to Portfolio</a></div>
   </div>
 </main>
