@@ -390,7 +390,6 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     <p>The technique involves identifying both the first and second nearest neighbors for each feature. A match is considered valid only if the first nearest neighbor's strength significantly surpasses that of the second. A threshold of <span class="highlight">0.6</span> was used for this comparison, as indicated by the paper to be the point where a match becomes less likely to be correct.</p>
 
     <h3>Examples of Matched Features</h3>
-    <div class="figgrid cols-2">
       <figure>
         <img src="matches_left_middle.png" alt="Left-Middle Feature Matches">
         <figcaption><strong>Left-Middle Feature Matches:</strong> 7 matches found between left and middle images using Lowe's ratio test with threshold 0.6.</figcaption>
@@ -399,7 +398,6 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
         <img src="matches_middle_right.png" alt="Middle-Right Feature Matches">
         <figcaption><strong>Middle-Right Feature Matches:</strong> 11 matches found between middle and right images, showing good correspondence for adjacent views.</figcaption>
       </figure>
-    </div>
     <figure>
         <img src="matches_lines_left_middle.png" alt="Left-Middle Feature Matches">
         <figcaption><strong>Matches Lines Left Midddle</strong> The lines of the 7 matches found between left and middle images</figcaption>
@@ -465,14 +463,6 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
       <img src="final_panoramic_mosaics.png" alt="Panoramic Mosaics Comparison">
       <figcaption>Complete panoramic mosaics showing manual vs automatic stitching with both Nearest Neighbor and Bilinear interpolation methods. Each mosaic combines all three images into a single seamless panorama.</figcaption>
     </figure>
-
-    <h3>Individual Mosaic Results</h3>
-    <div>
-      <figure>
-        <img src="final_panoramic_mosaics.png" alt="Manual NN Mosaic">
-        <figcaption>All of the mosaic implementations and images.</figcaption>
-      </figure>
-    </div>
 
     <h3>RANSAC Performance Analysis</h3>
     <div class="stats-grid">
