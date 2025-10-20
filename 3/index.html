@@ -283,6 +283,263 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     </ul>
   </section>
 
+
+  <section class="card" id="part-b1">
+    <h2>Part B.1: Harris Corner Detection</h2>
+    <p>The first part of the auto-stitching focused on determining the Harris corners in the image, and implementing Adaptive Non-Maximal Suppression (ANMS).</p>
+    
+    <p>Filtering by points that are at least 20 pixels inward from an edge, the Harris corner detection algorithm is then utilized to get an initial list of potential features.</p>
+    
+    <p>This is filtered further using ANMS, which is an algorithm where this list of points is further filtered based on maximum distance to a point which has sufficiently higher strength than the current one.</p>
+
+    <h3>Harris Detector Results</h3>
+    <div class="figgrid cols-3">
+      <figure>
+        <img src="harris_corner_results.png" alt="Harris Corner Detection Results">
+        <figcaption>Harris Detector Results: Left, Middle, and Right images with detected corners (red dots) before ANMS filtering.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Algorithm Implementation</h3>
+    <p>Implemented single-scale Harris corner detection based on the MOPS paper with the following parameters:</p>
+    <ul>
+      <li><strong>Derivative scale (σ_d):</strong> 1.0</li>
+      <li><strong>Integration scale (σ_i):</strong> 1.5</li>
+      <li><strong>Corner strength threshold:</strong> 10.0</li>
+      <li><strong>Harmonic mean formula:</strong> f_HM = det(H) / tr(H) = (λ₁λ₂) / (λ₁ + λ₂)</li>
+    </ul>
+
+    <h3>Adaptive Non-Maximal Suppression (ANMS)</h3>
+    <p>ANMS ensures good spatial distribution of features by selecting corners that are local maxima in their neighborhood. The suppression radius for each corner is computed as:</p>
+    <pre>r_i = min_j |x_i - x_j|, s.t. f(x_i) < c_robust × f(x_j)</pre>
+    <p>Where <span class="highlight">c_robust = 0.9</span> ensures neighbors must have significantly higher strength.</p>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">1,116</span>
+        <span class="stat-label">Left Image Corners</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">1,198</span>
+        <span class="stat-label">Middle Image Corners</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">1,475</span>
+        <span class="stat-label">Right Image Corners</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">500</span>
+        <span class="stat-label">After ANMS (each)</span>
+      </div>
+    </div>
+
+    <h3>Key Features</h3>
+    <ul>
+      <li><strong>Local maxima detection:</strong> 3×3 neighborhood search</li>
+      <li><strong>Robust suppression:</strong> Maintains spatial distribution</li>
+      <li><strong>Efficient selection:</strong> Greedy algorithm for corner selection</li>
+      <li><strong>Quality control:</strong> Only strongest, well-distributed corners retained</li>
+    </ul>
+  </section>
+
+  <!-- PART B.2: FEATURE DESCRIPTOR EXTRACTION -->
+  <section class="card" id="part-b2">
+    <h2>Part B.2: Feature Descriptor Extraction</h2>
+    <p>This part focused on extracting the feature descriptors around the pixels that were found in ANMS. A 40×40 area around the pixel was compressed into 8×8 by sampling every 5 pixels on both the horizontal and vertical axes, to be able to capture a larger area around the pixel.</p>
+
+    <h3>Sample Feature Descriptors</h3>
+    <figure>
+      <img src="sample_descriptors.png" alt="Sample 8x8 Feature Descriptors">
+      <figcaption>Sample 8×8 feature descriptors (bias/gain normalized) extracted from Harris corners. Each descriptor represents local image structure around a corner point.</figcaption>
+    </figure>
+
+    <h3>Descriptor Extraction Process</h3>
+    <ol>
+      <li><strong>40×40 window extraction:</strong> Extract window around each Harris corner</li>
+      <li><strong>Gaussian blur:</strong> Apply σ = 1.0 blur to the 40×40 window</li>
+      <li><strong>8×8 sampling:</strong> Sample from center of blurred window</li>
+      <li><strong>Bias/gain normalization:</strong> Zero mean, unit variance</li>
+    </ol>
+
+    <h3>Normalization Formula</h3>
+    <pre>descriptor_normalized = (descriptor - mean) / std</pre>
+    <p>This ensures descriptors are invariant to lighting changes and makes matching more robust.</p>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">8×8</span>
+        <span class="stat-label">Descriptor Size</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">40×40</span>
+        <span class="stat-label">Sampling Window</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">0.0000</span>
+        <span class="stat-label">Mean Value</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">1.0000</span>
+        <span class="stat-label">Std Value</span>
+      </div>
+    </div>
+
+    <h3>Descriptor Quality Analysis</h3>
+    <ul>
+      <li><strong>Perfect normalization:</strong> Mean = 0.0000, Std = 1.0000</li>
+      <li><strong>Value range:</strong> -1.8070 to 3.2323 (typical for normalized descriptors)</li>
+      <li><strong>Invariance:</strong> Robust to lighting and contrast changes</li>
+      <li><strong>Distinctiveness:</strong> Each descriptor captures unique local structure</li>
+    </ul>
+  </section>
+
+  <!-- PART B.3: FEATURE MATCHING -->
+  <section class="card" id="part-b3">
+    <h2>Part B.3: Feature Matching</h2>
+    <p>This section details the process of matching feature descriptors, building upon previous steps. While a common method involves selecting the nearest neighbors, a more robust approach, suggested by MOPS papers, was implemented.</p>
+    
+    <h3>Matching Strategy</h3>
+    <p>The technique involves identifying both the first and second nearest neighbors for each feature. A match is considered valid only if the first nearest neighbor's strength significantly surpasses that of the second. A threshold of <span class="highlight">0.6</span> was used for this comparison, as indicated by the paper to be the point where a match becomes less likely to be correct.</p>
+
+    <h3>Examples of Matched Features</h3>
+    <div class="figgrid cols-2">
+      <figure>
+        <img src="matches_left_middle.png" alt="Left-Middle Feature Matches">
+        <figcaption><strong>Left-Middle Feature Matches:</strong> 7 matches found between left and middle images using Lowe's ratio test with threshold 0.6.</figcaption>
+      </figure>
+      <figure>
+        <img src="matches_middle_right.png" alt="Middle-Right Feature Matches">
+        <figcaption><strong>Middle-Right Feature Matches:</strong> 11 matches found between middle and right images, showing good correspondence for adjacent views.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Lowe's Ratio Test Implementation</h3>
+    <p>For each descriptor in the first image, we find the two nearest neighbors in the second image and compute:</p>
+    <pre>ratio = distance_to_first_nearest / distance_to_second_nearest</pre>
+    <p>If <code>ratio < 0.6</code>, the match is accepted as reliable.</p>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">7</span>
+        <span class="stat-label">Left ↔ Middle</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">11</span>
+        <span class="stat-label">Middle ↔ Right</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">1</span>
+        <span class="stat-label">Left ↔ Right</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">0.6</span>
+        <span class="stat-label">Ratio Threshold</span>
+      </div>
+    </div>
+
+    <h3>Distance Computation</h3>
+    <ul>
+      <li><strong>Method:</strong> Euclidean distance between 64-dimensional descriptor vectors</li>
+      <li><strong>Efficiency:</strong> Vectorized computation using scipy.spatial.distance.cdist</li>
+      <li><strong>Robustness:</strong> Ratio test eliminates ambiguous matches</li>
+      <li><strong>Quality:</strong> High confidence matches only</li>
+    </ul>
+
+    <h3>Matching Results Analysis</h3>
+    <p>The results show expected behavior for a panoramic sequence:</p>
+    <ul>
+      <li><strong>Adjacent images:</strong> Good overlap leads to more matches (7-11)</li>
+      <li><strong>Non-adjacent images:</strong> Minimal overlap results in few matches (1)</li>
+      <li><strong>Quality over quantity:</strong> Ratio test ensures reliable correspondences</li>
+    </ul>
+  </section>
+
+  <!-- PART B.4: RANSAC FOR ROBUST HOMOGRAPHY -->
+  <section class="card" id="part-b4">
+    <h2>Part B.4: RANSAC for Robust Homography</h2>
+    <p>Implemented 4-point RANSAC algorithm from scratch to determine the optimal homography matrix. The process involves choosing 4 random points over several thousand iterations, calculating the homography, identifying "inliers" (pixels within 3 pixels of the projected pixel from another image), and iteratively refining the set of inliers until the best set is found.</p>
+
+    <h3>RANSAC Algorithm Implementation</h3>
+    <ol>
+      <li><strong>Random sampling:</strong> Select 4 random point correspondences</li>
+      <li><strong>Homography computation:</strong> Solve 4-point homography using SVD</li>
+      <li><strong>Inlier detection:</strong> Count points with reprojection error < 3 pixels</li>
+      <li><strong>Model selection:</strong> Keep homography with most inliers</li>
+      <li><strong>Iteration:</strong> Repeat up to 1000 times or until convergence</li>
+    </ol>
+
+    <h3>Panoramic Mosaics - Manual vs Automatic Stitching</h3>
+    <figure>
+      <img src="final_panoramic_mosaics.png" alt="Panoramic Mosaics Comparison">
+      <figcaption>Complete panoramic mosaics showing manual vs automatic stitching with both Nearest Neighbor and Bilinear interpolation methods. Each mosaic combines all three images into a single seamless panorama.</figcaption>
+    </figure>
+
+    <h3>Individual Mosaic Results</h3>
+    <div class="figgrid cols-2">
+      <figure>
+        <img src="final_campanile_nn_blurred_manual.png" alt="Manual NN Mosaic">
+        <figcaption><strong>Campanile NN Blurred Manual:</strong> Simple horizontal concatenation with Nearest Neighbor interpolation.</figcaption>
+      </figure>
+      <figure>
+        <img src="final_campanile_bilinear_blurred_manual.png" alt="Manual Bilinear Mosaic">
+        <figcaption><strong>Campanile Bilinear Blurred Manual:</strong> Horizontal concatenation with smooth Bilinear interpolation.</figcaption>
+      </figure>
+      <figure>
+        <img src="final_campanile_nn_blurred_automatic.png" alt="Automatic NN Mosaic">
+        <figcaption><strong>Campanile NN Blurred Automatic:</strong> RANSAC-estimated homography with Nearest Neighbor warping.</figcaption>
+      </figure>
+      <figure>
+        <img src="final_campanile_bilinear_blurred_automatic.png" alt="Automatic Bilinear Mosaic">
+        <figcaption><strong>Campanile Bilinear Blurred Automatic:</strong> RANSAC-estimated homography with smooth Bilinear warping.</figcaption>
+      </figure>
+    </div>
+
+    <h3>RANSAC Performance Analysis</h3>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">71%</span>
+        <span class="stat-label">Left-Middle Inliers</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">91%</span>
+        <span class="stat-label">Middle-Right Inliers</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">3px</span>
+        <span class="stat-label">Inlier Threshold</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">1000</span>
+        <span class="stat-label">Max Iterations</span>
+      </div>
+    </div>
+
+    <h3>Homography Computation Details</h3>
+    <p>Each 4-point homography is computed by solving the system <strong>Ah = 0</strong> where:</p>
+    <ul>
+      <li><strong>A matrix:</strong> 8×9 system matrix from 4 point correspondences</li>
+      <li><strong>SVD solution:</strong> Right singular vector for smallest singular value</li>
+      <li><strong>Normalization:</strong> Homography normalized by H[2,2] element</li>
+      <li><strong>Robustness:</strong> Handles degenerate cases and numerical issues</li>
+    </ul>
+
+    <h3>Stitching Quality Comparison</h3>
+    <ul>
+      <li><strong>Manual stitching:</strong> Simple concatenation, good for baseline comparison</li>
+      <li><strong>Automatic stitching:</strong> RANSAC-estimated homography provides better alignment</li>
+      <li><strong>Nearest Neighbor:</strong> Faster processing, visible pixelation</li>
+      <li><strong>Bilinear:</strong> Smoother results, better visual quality</li>
+    </ul>
+
+    <h3>Technical Achievements</h3>
+    <ul>
+      <li><strong>From scratch implementation:</strong> No external RANSAC libraries used</li>
+      <li><strong>Robust outlier rejection:</strong> High inlier rates (71-91%)</li>
+      <li><strong>Seamless panoramas:</strong> All three images combined into single mosaic</li>
+      <li><strong>Professional output:</strong> High-quality visual results</li>
+    </ul>
+  </section>
+
   <div class="footer">
     <div>Samar Farooqi • CS180 Project 3</div>
     <div><a href="../index.html">← Back to Portfolio</a></div>
