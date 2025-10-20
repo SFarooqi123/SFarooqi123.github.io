@@ -293,7 +293,7 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     <p>This is filtered further using ANMS, which is an algorithm where this list of points is further filtered based on maximum distance to a point which has sufficiently higher strength than the current one.</p>
 
     <h3>Harris Detector Results</h3>
-    <div class="figgrid cols-3">
+    <div>
       <figure>
         <img src="harris_corner_results.png" alt="Harris Corner Detection Results">
         <figcaption>Harris Detector Results: Left, Middle, and Right images with detected corners (red dots) before ANMS filtering.</figcaption>
@@ -408,14 +408,14 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
         <figcaption><strong>Left-Middle Feature Matches:</strong> 7 matches found between left and middle images using Lowe's ratio test with threshold 0.6.</figcaption>
       </figure>
       <figure>
-        <img src="matches_lines_left_middle.png" alt="Left-Middle Feature Matches">
-        <figcaption><strong>Matches Lines Left Midddle</strong> The lines of the 7 matches found between left and middle images</figcaption>
-      </figure>
-      <figure>
         <img src="matches_middle_right.png" alt="Middle-Right Feature Matches">
         <figcaption><strong>Middle-Right Feature Matches:</strong> 11 matches found between middle and right images, showing good correspondence for adjacent views.</figcaption>
       </figure>
     </div>
+    <figure>
+        <img src="matches_lines_left_middle.png" alt="Left-Middle Feature Matches">
+        <figcaption><strong>Matches Lines Left Midddle</strong> The lines of the 7 matches found between left and middle images</figcaption>
+    </figure>
 
     <h3>Lowe's Ratio Test Implementation</h3>
     <p>For each descriptor in the first image, we find the two nearest neighbors in the second image and compute:</p>
@@ -479,7 +479,7 @@ h₂₁x + h₂₂y + h₂₃ - h₃₁xy' - h₃₂yy' = y'</pre>
     </figure>
 
     <h3>Individual Mosaic Results</h3>
-    <div class="figgrid cols-2">
+    <div>
       <figure>
         <img src="final_panoramic_mosaics.png" alt="Manual NN Mosaic">
         <figcaption>All of the mosaic implementations and images.</figcaption>
